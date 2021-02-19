@@ -1,292 +1,139 @@
 'use strict'
 
-let workHours = ['6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM'] // Working hours for each location.
+// Working hours for each location.
+let workHours = ['6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM']
 
 // Generate random number of customers for every opening hour with a minimum and maximum arguments.
 function randHourlyCust(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-//  Create a literal object for the 1st location
-const shop1 = {
-  locName: 'Seattle',
-  minCust: 23,
-  maxCust: 65,
-  avgCookie: 6.3,
-  total: 0,
+// Creat an object constructer:
+let shops = [];
 
-  // generate the number of customers per hour from the random function created.
-  custPerHour: [],
-  calcCustPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.custPerHour.push(randHourlyCust(this.minCust, this.maxCust))
-    }
-  },
+function Shop(locName, minCust, maxCust, avgCookie) {
+  this.locName = locName;
+  this.minCust = minCust;
+  this.maxCust = maxCust;
+  this.avgCookie = avgCookie;
+  this.custPerHour = [];
+  this.cookiesPerHour = [];
+  this.totalCookiesPerDay = 0;
+  shops.push(this);
+}
 
-  // calculate cookies sold per hour by multipling the average cookies sold for each customer with the random number of customers each hour.
-  cookiesPerHour: [],
-  calcCookiesPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.cookiesPerHour.push(Math.floor(this.custPerHour[i] * this.avgCookie));
-      // this.total += Math.floor(this.custPerHour[i] * this.avgCookie) // Longer way to calcuolate the total cookies
-      this.total += this.cookiesPerHour[i]
-    }
-  },
-
-
-  // render a header of the location name and a list of the cookies each hour and the total
-  render: function () {
-    let parent = document.getElementById('parent');
-    let shopName = document.createElement('h2');
-    parent.appendChild(shopName);
-    shopName.textContent = this.locName;
-    let unorderedList = document.createElement('ul');
-    parent.appendChild(unorderedList);
-
-    for (let i = 0; i < workHours.length; i++) {
-      let listItem = document.createElement('li');
-      unorderedList.appendChild(listItem);
-      listItem.textContent = `${workHours[i]}: ${this.cookiesPerHour[i]} Cookies`
-    }
-
-    let totalItem = document.createElement('li');
-    unorderedList.appendChild(totalItem);
-    totalItem.textContent = `Total: ${this.total} Cookies`
+// Calculate customers per hour
+Shop.prototype.calcCustPerHour = function () {
+  for (let i = 0; i < workHours.length; i++) {
+    this.custPerHour.push(randHourlyCust(this.minCust, this.maxCust))
   }
 }
 
-// calling the functions
-shop1.calcCustPerHour();
-shop1.calcCookiesPerHour();
-shop1.render();
-
-
-/////////////////////////////////////////////
-////////////////////////////////////////////
-
-
-//  Create a literal object for the 2nd location
-const shop2 = {
-  locName: 'Tokyo',
-  minCust: 3,
-  maxCust: 24,
-  avgCookie: 1.2,
-  total: 0,
-
-  // generate the number of customers per hour from the random function created.
-  custPerHour: [],
-  calcCustPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.custPerHour.push(randHourlyCust(this.minCust, this.maxCust))
-    }
-  },
-
-  // calculate cookies sold per hour by multipling the average cookies sold for each customer with the random number of customers each hour.
-  cookiesPerHour: [],
-  calcCookiesPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.cookiesPerHour.push(Math.floor(this.custPerHour[i] * this.avgCookie));
-      // this.total += Math.floor(this.custPerHour[i] * this.avgCookie) // Longer way to calcuolate the total cookies
-      this.total += this.cookiesPerHour[i]
-    }
-  },
-
-
-  // render a header of the location name and a list of the cookies each hour and the total
-  render: function () {
-    let parent = document.getElementById('parent');
-    let shopName = document.createElement('h2');
-    parent.appendChild(shopName);
-    shopName.textContent = this.locName;
-    let unorderedList = document.createElement('ul');
-    parent.appendChild(unorderedList);
-
-    for (let i = 0; i < workHours.length; i++) {
-      let listItem = document.createElement('li');
-      unorderedList.appendChild(listItem);
-      listItem.textContent = `${workHours[i]}: ${this.cookiesPerHour[i]} Cookies`
-    }
-
-    let totalItem = document.createElement('li');
-    unorderedList.appendChild(totalItem);
-    totalItem.textContent = `Total: ${this.total} Cookies`
+// Calculate Cookies per hour.
+Shop.prototype.calcCookiesPerHour = function () {
+  for (let i = 0; i < workHours.length; i++) {
+    this.cookiesPerHour.push(Math.floor(this.custPerHour[i] * this.avgCookie));
+    this.totalCookiesPerDay += this.cookiesPerHour[i]
   }
 }
 
-// calling the functions
-shop2.calcCustPerHour();
-shop2.calcCookiesPerHour();
-shop2.render();
+
+// create location instances 
+let seattle = new Shop('Seattle', 23, 65, 6.3)
+let tokyo = new Shop('Tokyo', 3, 24, 1.2)
+let dubai = new Shop('Dubai', 11, 38, 3.7)
+let paris = new Shop('Paris', 20, 38, 3.3)
+let lima = new Shop('Lima', 2, 16, 4.6)
+
+// add the table element
+let parent = document.getElementById('parent');
+let table = document.createElement('table');
+parent.appendChild(table);
 
 
-///////////////////////////////////////
-//////////////////////////////////////
 
+//add the header row
+let headerRow = document.createElement('tr');
+table.appendChild(headerRow);
 
-//  Create a literal object for the 1st location
-const shop3 = {
-  locName: 'Dubai',
-  minCust: 11,
-  maxCust: 38,
-  avgCookie: 3.7,
-  total: 0,
+// create the name headedr cell
+let firstTh = document.createElement('th');
+headerRow.appendChild(firstTh);
+firstTh.textContent = 'Name';
 
-  // generate the number of customers per hour from the random function created.
-  custPerHour: [],
-  calcCustPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.custPerHour.push(randHourlyCust(this.minCust, this.maxCust))
-    }
-  },
-
-  // calculate cookies sold per hour by multipling the average cookies sold for each customer with the random number of customers each hour.
-  cookiesPerHour: [],
-  calcCookiesPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.cookiesPerHour.push(Math.floor(this.custPerHour[i] * this.avgCookie));
-      // this.total += Math.floor(this.custPerHour[i] * this.avgCookie) // Longer way to calcuolate the total cookies
-      this.total += this.cookiesPerHour[i]
-    }
-  },
-
-
-  // render a header of the location name and a list of the cookies each hour and the total
-  render: function () {
-    let parent = document.getElementById('parent');
-    let shopName = document.createElement('h2');
-    parent.appendChild(shopName);
-    shopName.textContent = this.locName;
-    let unorderedList = document.createElement('ul');
-    parent.appendChild(unorderedList);
-
-    for (let i = 0; i < workHours.length; i++) {
-      let listItem = document.createElement('li');
-      unorderedList.appendChild(listItem);
-      listItem.textContent = `${workHours[i]}: ${this.cookiesPerHour[i]} Cookies`
-    }
-
-    let totalItem = document.createElement('li');
-    unorderedList.appendChild(totalItem);
-    totalItem.textContent = `Total: ${this.total} Cookies`
-  }
+// add the working hours to the header row
+for (let i = 0; i < (workHours.length); i++) {
+  let thElement = document.createElement('th');
+  headerRow.appendChild(thElement);
+  thElement.textContent = workHours[i];
 }
 
-// calling the functions
-shop3.calcCustPerHour();
-shop3.calcCookiesPerHour();
-shop3.render()
+// add the last daily location header cell
+let lastTh = document.createElement('th');
+headerRow.appendChild(lastTh);
+lastTh.textContent = 'Daily Location Total';
+
+// this code dosent render table rows for the locations
+
+// rendering table rows for each location
+Shop.prototype.render = function () {
 
 
-///////////////////////////////////////////
-//////////////////////////////////////////
+  let dataRow = document.createElement('tr');
+  table.appendChild(dataRow);
 
-//  Create a literal object for the 1st location
-const shop4 = {
-  locName: 'Paris',
-  minCust: 20,
-  maxCust: 38,
-  avgCookie: 3.3,
-  total: 0,
+  let nameData = document.createElement('td');
+  dataRow.appendChild(nameData);
+  nameData.textContent = this.locName;
 
-  // generate the number of customers per hour from the random function created.
-  custPerHour: [],
-  calcCustPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.custPerHour.push(randHourlyCust(this.minCust, this.maxCust))
-    }
-  },
-
-  // calculate cookies sold per hour by multipling the average cookies sold for each customer with the random number of customers each hour.
-  cookiesPerHour: [],
-  calcCookiesPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.cookiesPerHour.push(Math.floor(this.custPerHour[i] * this.avgCookie));
-      // this.total += Math.floor(this.custPerHour[i] * this.avgCookie) // Longer way to calcuolate the total cookies
-      this.total += this.cookiesPerHour[i]
-    }
-  },
-
-
-  // render a header of the location name and a list of the cookies each hour and the total
-  render: function () {
-    let parent = document.getElementById('parent');
-    let shopName = document.createElement('h2');
-    parent.appendChild(shopName);
-    shopName.textContent = this.locName;
-    let unorderedList = document.createElement('ul');
-    parent.appendChild(unorderedList);
-
-    for (let i = 0; i < workHours.length; i++) {
-      let listItem = document.createElement('li');
-      unorderedList.appendChild(listItem);
-      listItem.textContent = `${workHours[i]}: ${this.cookiesPerHour[i]} Cookies`
-    }
-
-    let totalItem = document.createElement('li');
-    unorderedList.appendChild(totalItem);
-    totalItem.textContent = `Total: ${this.total} Cookies`
+  for (let i = 0; i < workHours.length; i++) {
+    let tdElement = document.createElement('td')
+    tdElement.textContent = this.cookiesPerHour[i];
+    dataRow.appendChild(tdElement)
   }
+
+  let totalDataPerLoc = document.createElement('td');
+  dataRow.appendChild(totalDataPerLoc);
+  totalDataPerLoc.textContent = this.totalCookiesPerDay
 }
 
-// calling the functions
-shop4.calcCustPerHour();
-shop4.calcCookiesPerHour();
-shop4.render();
 
 
-////////////////////////////////////////
-///////////////////////////////////////
+let makeFooter = function () {
+  let footerRow = document.createElement('tr');
+  table.appendChild(footerRow)
+
+  let footerTh = document.createElement('th');
+  footerRow.appendChild(footerTh);
+  footerTh.textContent = 'Totals'
+
+  let grandTotal = 0;
+  for (let i = 0; i < workHours.length; i++) {
+    let totalPerHour = 0;
 
 
-//  Create a literal object for the 1st location
-const shop5 = {
-  locName: 'Lima',
-  minCust: 2,
-  maxCust: 16,
-  avgCookie: 4.6,
-  total: 0,
-
-  // generate the number of customers per hour from the random function created.
-  custPerHour: [],
-  calcCustPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.custPerHour.push(randHourlyCust(this.minCust, this.maxCust))
-    }
-  },
-
-  // calculate cookies sold per hour by multipling the average cookies sold for each customer with the random number of customers each hour.
-  cookiesPerHour: [],
-  calcCookiesPerHour: function () {
-    for (let i = 0; i < workHours.length; i++) {
-      this.cookiesPerHour.push(Math.floor(this.custPerHour[i] * this.avgCookie));
-      // this.total += Math.floor(this.custPerHour[i] * this.avgCookie) // Longer way to calcuolate the total cookies
-      this.total += this.cookiesPerHour[i]
-    }
-  },
-
-
-  // render a header of the location name and a list of the cookies each hour and the total
-  render: function () {
-    let parent = document.getElementById('parent');
-    let shopName = document.createElement('h2');
-    parent.appendChild(shopName);
-    shopName.textContent = this.locName;
-    let unorderedList = document.createElement('ul');
-    parent.appendChild(unorderedList);
-
-    for (let i = 0; i < workHours.length; i++) {
-      let listItem = document.createElement('li');
-      unorderedList.appendChild(listItem);
-      listItem.textContent = `${workHours[i]}: ${this.cookiesPerHour[i]} Cookies`
+    for (let j = 0; j < shops.length; j++) {
+      totalPerHour += shops[j].cookiesPerHour[i];
+      grandTotal += shops[j].cookiesPerHour[i];
     }
 
-    let totalItem = document.createElement('li');
-    unorderedList.appendChild(totalItem);
-    totalItem.textContent = `Total: ${this.total} Cookies`
+    footerTh = document.createElement('th');
+    footerRow.appendChild(footerTh);
+    footerTh.textContent = totalPerHour;
   }
+
+  let finalTH = document.createElement('th');
+  footerRow.appendChild(finalTH);
+  finalTH.textContent = grandTotal
+
+
 }
 
-// calling the functions
-shop5.calcCustPerHour();
-shop5.calcCookiesPerHour();
-shop5.render();
+
+for (let i = 0; i < shops.length; i++) {
+  shops[i].calcCustPerHour();
+  shops[i].calcCookiesPerHour();
+  shops[i].render();
+}
+
+makeFooter();
