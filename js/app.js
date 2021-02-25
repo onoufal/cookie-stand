@@ -8,6 +8,8 @@ function randHourlyCust(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+
+
 // Creat an object constructer:
 let shops = [];
 
@@ -128,6 +130,62 @@ let makeFooter = function () {
 
 
 }
+
+
+
+
+let locForm = document.getElementById('locationForm');
+
+locForm.addEventListener('submit', submitter)
+
+
+function submitter(event) {
+
+  event.preventDefault()
+
+  console.log(event);
+
+  let locName = event.target.locName.value;
+
+  console.log(locName);
+
+  let minCust = event.target.minCust.value;
+
+  console.log(minCust);
+
+
+  let maxCust = event.target.maxCust.value;
+  console.log(maxCust);
+
+  let avgCookies = event.target.avgCookies.value
+  console.log(avgCookies);
+
+
+  let addedLocation = new Shop(locName, minCust, maxCust, avgCookies);
+
+  addedLocation.calcCustPerHour();
+  addedLocation.calcCookiesPerHour();
+  addedLocation.render();
+
+
+  // let container = document.getElementById('parent')
+
+  // console.log(container);
+
+  // container.textContent = ''
+
+  // for (let i = 0; i < shops.length; i++) {
+  //   shops[i].calcCustPerHour();
+  //   shops[i].calcCookiesPerHour();
+  //   shops[i].render();
+  // }
+
+
+
+}
+
+
+
 
 
 for (let i = 0; i < shops.length; i++) {
