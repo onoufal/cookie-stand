@@ -14,6 +14,8 @@ nav{
  
 }
 
+
+
 nav ul {
   position: absolute;
   right: 50%;
@@ -32,7 +34,7 @@ a {
   font-size: 25px;
 }
 
-main {
+header {
   position: relative;
 }
 
@@ -49,4 +51,52 @@ main {
   font-family: 'Reggae One', cursive;
   font-size: 40px;
   color: orangered;
+}
+
+span {
+  font-weight: bold;
+}
+
+#locations {
+ 
+  width: 330px;
+  padding: 10px;
+  position: absolute;
+  bottom: 80px;
+  margin-left: 30px;
+}
+
+table, th, td {
+  border: 2px solid;
+}
+
+#hours {
+  width: 390px;
+  position: absolute;
+  bottom: 80px;
+  right: 50px;
+}
+
+
+#hours h3 {
+  text-align: center;
+}
+
+footer {
+  position: absolute;
+  bottom: -10px;
+  right: 200px;
+  
+
+}
+
+
+#family {
+  position: absolute;
+  left: 500px;
+  bottom: 70px;
+}
+
+#family img {
+  width: 350px;
 }
